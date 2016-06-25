@@ -19,7 +19,7 @@
 
 @interface HomeTableViewController ()
 @property(nonatomic, strong) BlurView *blurView;
-// 所有的主题分类
+// 所有的主题分ZX类  
 @property(nonatomic, strong) NSMutableArray<Categorys *> *categories;
 // 文章数组
 @property(nonatomic, strong) NSMutableArray<Article *> *articles;
