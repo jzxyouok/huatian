@@ -26,7 +26,7 @@
     NSString *curVersion = dict[@"CFBundleShortVersionString"];
     
     // 获取上一次的版本号
-    NSString *lastVersion = [HMFileManager readUserDataForKey:LXVersionKey];
+    NSString *lastVersion = [LXFileManager readUserDataForKey:LXVersionKey];
     
     // 之前的最新的版本号 lastVersion
     if ([curVersion isEqualToString:lastVersion]) {
@@ -37,7 +37,7 @@
     }else{ // 有最新的版本号
     
         rootVc = [[NewFeatureViewController alloc] init];
-        [HMFileManager saveUserData:curVersion forKey:LXVersionKey];
+        [LXFileManager saveUserData:curVersion forKey:LXVersionKey];
     }
     
     return rootVc;

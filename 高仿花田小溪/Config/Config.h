@@ -25,7 +25,8 @@ typedef void (^NetWorkBlock)(BOOL netConnetState);
 #define MY_HEIGHT [UIScreen mainScreen].bounds.size.height
 
 #define CategoriesKey @"CategoriesKey"
-
+#define TopArticleAuthor @"topArticleAuthor"
+#define TopContents @"topContents"
 
 
 #ifdef DEBUG //如果处于调试阶段调用

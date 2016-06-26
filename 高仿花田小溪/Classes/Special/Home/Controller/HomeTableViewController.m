@@ -14,10 +14,11 @@
 #import "TitleBtn.h"
 #import "HomeArticleCell.h"
 #import "NetworkTool.h"
+#import "TopViewController.h"
 
 #import "MJRefresh.h"
 
-@interface HomeTableViewController ()
+@interface HomeTableViewController ()<BlurViewDelegate>
 @property(nonatomic, strong) BlurView *blurView;
 // 所有的主题分ZX类  
 @property(nonatomic, strong) NSMutableArray<Categorys *> *categories;
@@ -31,6 +32,8 @@ DIYObj_(TitleBtn, titleBtn)
 DIYObj_(NetworkTool, tools)
 //是否加载更多
 BOOL_(isToLoadMore)
+//左侧按钮
+Button_(menuBtn)
 
 @end
 
@@ -74,6 +77,7 @@ static NSString *HomeArticleReuseIdentifier = @"HomeArticleReuseIdentifier";
     if (!_blurView) {
         _blurView = [[BlurView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
         _blurView.categories = self.categories;
+        _blurView.delegate = self;
     }
     return _blurView;
 }
@@ -84,8 +88,9 @@ static NSString *HomeArticleReuseIdentifier = @"HomeArticleReuseIdentifier";
     [self setup];
     //
     [self setRefresh];
+    
+    [self getCategories];
 }
-
 //基本配置
 - (void)setup
 {
@@ -97,7 +102,7 @@ static NSString *HomeArticleReuseIdentifier = @"HomeArticleReuseIdentifier";
     [menuBtn setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
     menuBtn.lx_size = CGSizeMake(20, 20);
     [menuBtn addTarget:self action:@selector(selectedCategory:) forControlEvents:UIControlEventTouchUpInside];
-    
+    self.menuBtn = menuBtn;
     //右按钮
     UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"TOP" style:UIBarButtonItemStylePlain target:self action:@selector(toTop)];
     self.navigationItem.rightBarButtonItem = rightItem;
@@ -130,8 +135,8 @@ static NSString *HomeArticleReuseIdentifier = @"HomeArticleReuseIdentifier";
 //请求第一次数据列表
 - (void)getNewData
 {
-        self.currentPage = 0;
-        [self.articles removeAllObjects];
+     self.currentPage = 0;
+    [self.articles removeAllObjects];
     
     [self.tools getHomeListDataWithCurrentPage:self.currentPage selectedCategry:self.selectedCategry block:^(id json) {
         
@@ -214,11 +219,25 @@ static NSString *HomeArticleReuseIdentifier = @"HomeArticleReuseIdentifier";
         LXLog(@"%@",error);
     }];
 }
+//请求Categories
+- (void)getCategories
+{
+    [self.tools getCategoriesData:^(id json) {
+        
+        if ([json isKindOfClass:[NSArray class]]) {
+            [self.categories addObjectsFromArray:json];
+        }
+
+    } failure:^(NSError *error) {
+        
+    }];
+}
 
 
 - (void)toTop
 {
-    
+    TopViewController *topVC = [[TopViewController alloc] init];
+    [self.navigationController pushViewController:topVC animated:YES];
 }
 
 //弹出蒙版及动画
@@ -278,7 +297,7 @@ static NSString *HomeArticleReuseIdentifier = @"HomeArticleReuseIdentifier";
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     if (self.articles.count) {
         Article *article = self.articles[indexPath.row];
-        LXLog(@"name -- %@",article.desc);
+//        LXLog(@"name -- %@",article.desc);
         cell.article = article;
         
         //添加点击头像按钮的点击事件
@@ -286,7 +305,7 @@ static NSString *HomeArticleReuseIdentifier = @"HomeArticleReuseIdentifier";
     
     if (self.articles.count && indexPath.row == self.articles.count - 1 && !self.isToLoadMore) {
         self.isToLoadMore = YES;
-//        self.isAutoLoadMore = NO;
+
         self.currentPage += 1;
         LXLog(@"%zd",self.currentPage);
         [self getMoreData];
@@ -296,48 +315,13 @@ static NSString *HomeArticleReuseIdentifier = @"HomeArticleReuseIdentifier";
 }
 
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+#pragma mark - BlurViewDelegate
+- (void)blurView:(BlurView *)blurView didSelectCategory:(id)Category
+{
+    //去掉高斯效果（点击按钮事件）
+    [self selectedCategory:self.menuBtn];
+    self.selectedCategry = Category;
+    [self getNewData];
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

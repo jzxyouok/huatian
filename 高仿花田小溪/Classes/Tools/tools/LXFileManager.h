@@ -1,15 +1,8 @@
-//
-//  HMFileManager.h
-//  HMExtents
-//
-//  Created by yons on 15/7/9.
-//  Copyright (c) 2015年 大兵布莱恩特. All rights reserved.
-//
 
 #import <Foundation/Foundation.h>
 
 /// 文件管理类
-@interface HMFileManager : NSObject
+@interface LXFileManager : NSObject
 
 /// 把对象归档存到沙盒里
 +(void)saveObject:(id)object byFileName:(NSString*)fileName;

@@ -12,4 +12,8 @@
 
 @interface NetworkTool : NSObject
 -(void)getHomeListDataWithCurrentPage:(int)currentPage selectedCategry:(Categorys *)selectedCategorys block:(void(^)(id json))block failure:(void(^)(NSError *error))failure;
+
+-(void)getCategoriesData:(void(^)(id json))block failure:(void(^)(NSError *error))failure;
+
+-(void)getTop10DataWithActionType:(NSString *)actionType block:(void(^)(id json))block failure:(void(^)(NSError *error))failure;
 @end

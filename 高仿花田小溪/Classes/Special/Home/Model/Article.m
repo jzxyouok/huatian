@@ -10,7 +10,7 @@
 #import "MJExtension.h"
 @implementation Article
 MJCodingImplementation
-- (NSDictionary *)replacedKeyFromPropertyName
++ (NSDictionary *)mj_replacedKeyFromPropertyName
 {
     return @{@"ID":@"id"};
 }

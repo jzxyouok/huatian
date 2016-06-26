@@ -10,7 +10,7 @@
 #import "MJExtension.h"
 @implementation Author
 MJCodingImplementation
-- (NSDictionary *)replacedKeyFromPropertyName
++ (NSDictionary *)mj_replacedKeyFromPropertyName
 {
     return @{@"ID":@"id"};
 }
@@ -18,7 +18,7 @@ MJCodingImplementation
 - (void)setHeadImg:(NSString *)headImg
 {
     
-    if ([headImg hasPrefix:@"http://"]) {
+    if (![headImg hasPrefix:@"http://"]) {
         headImg = [NSString stringWithFormat:@"http://static.htxq.net/%@",headImg];
     }
     _headImg = headImg;
