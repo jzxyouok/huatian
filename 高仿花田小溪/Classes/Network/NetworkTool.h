@@ -16,4 +16,7 @@
 -(void)getCategoriesData:(void(^)(id json))block failure:(void(^)(NSError *error))failure;
 
 -(void)getTop10DataWithActionType:(NSString *)actionType block:(void(^)(id json))block failure:(void(^)(NSError *error))failure;
+
+-(void)getArticleDetailDataWithDetailID:(NSString *)ID block:(void(^)(id json))block failure:(void(^)(NSError *error))failure;
+
 @end

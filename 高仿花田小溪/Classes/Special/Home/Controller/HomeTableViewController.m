@@ -15,6 +15,7 @@
 #import "HomeArticleCell.h"
 #import "NetworkTool.h"
 #import "TopViewController.h"
+#import "DetailViewController.h"
 
 #import "MJRefresh.h"
 
@@ -314,6 +315,14 @@ static NSString *HomeArticleReuseIdentifier = @"HomeArticleReuseIdentifier";
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    Article *article = self.articles[indexPath.row];
+    DetailViewController *vc = [[DetailViewController alloc] init];
+    vc.article = article;
+    [vc setHidesBottomBarWhenPushed:YES];
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 #pragma mark - BlurViewDelegate
 - (void)blurView:(BlurView *)blurView didSelectCategory:(id)Category

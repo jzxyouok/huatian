@@ -6,6 +6,7 @@
 //  Copyright © 2016年 Lee. All rights reserved.
 //
 
+#warning 使用一个tableView  当网络不好时切换  用户体验不好！！
 #import "TopViewController.h"
 #import "TopMenuView.h"
 #import "NetworkTool.h"
@@ -47,7 +48,7 @@ DIYObj_(TopMenuView, topMenuView)
 - (void)setDatasource:(NSMutableArray *)datasource
 {
     _datasource = datasource;
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
 }
 
 - (void)viewDidLoad {
@@ -86,7 +87,9 @@ DIYObj_(TopMenuView, topMenuView)
 {
     [self.tools getTop10DataWithActionType:self.action block:^(id json) {
         if ([json isKindOfClass:[NSArray class]]) {
+            [self.datasource removeAllObjects];
             self.datasource = json;
+            [self.tableView reloadData];
         }
     } failure:^(NSError *error) {
         
@@ -105,43 +108,58 @@ DIYObj_(TopMenuView, topMenuView)
     
     //专题
     if ([self.action isEqualToString:TopContents]) {
-        if (indexPath.row <3) {
-            TopArticleNormalCell *cell = [tableView dequeueReusableCellWithIdentifier:TopArticleNormalCellReuseIdentifier forIndexPath:indexPath];
-            if (self.datasource.count) {
-                cell.article = self.datasource[indexPath.row];
-                cell.sort = (int)(indexPath.row + 1);
-            }
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            return cell;
-            
-        }else
-        {
-            TopArticleOtherCell *cell = [tableView dequeueReusableCellWithIdentifier:TopArticleOtherCellReuseIdentifier forIndexPath:indexPath];
-            if (self.datasource.count) {
-                cell.article = self.datasource[indexPath.row];
-                cell.sort = (int)(indexPath.row + 1);
-            }
+        
+        if ([self.datasource[indexPath.row] isKindOfClass:[Article class]]) {
 
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            return cell;
+            if (indexPath.row <3) {
+                TopArticleNormalCell *cell = [tableView dequeueReusableCellWithIdentifier:TopArticleNormalCellReuseIdentifier forIndexPath:indexPath];
+                if (self.datasource.count) {
+                    cell.article = self.datasource[indexPath.row];
+                    cell.sort = (int)(indexPath.row + 1);
+                }
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                return cell;
+                
+            }else
+            {
+                TopArticleOtherCell *cell = [tableView dequeueReusableCellWithIdentifier:TopArticleOtherCellReuseIdentifier forIndexPath:indexPath];
+                if (self.datasource.count) {
+                    cell.article = self.datasource[indexPath.row];
+                    cell.sort = (int)(indexPath.row + 1);
+                }
+                
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+                return cell;
+            }
         }
+        
+        
     }
     //作者
 
     TopAuthorCell *cell = [tableView dequeueReusableCellWithIdentifier:TopAuthorCellReuseIdentifier forIndexPath:indexPath];
 
     if (self.datasource.count) {
-        cell.author = self.datasource[indexPath.row];
-        cell.sort = (int)(indexPath.row + 1);
+        if ([self.datasource[indexPath.row] isKindOfClass:[Author class]]) {
+            cell.author = self.datasource[indexPath.row];
+            cell.sort = (int)(indexPath.row + 1);
+        }
+        
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //如果是作者
     if ([self.action isEqualToString:@"topArticleAuthor"]) {
-        return 60;
+        
+        if ([self.datasource[indexPath.row] isKindOfClass:[Article class]]) {
+
+            return 60;
+        }
+        
     }
     return 120;
 }
@@ -156,6 +174,8 @@ DIYObj_(TopMenuView, topMenuView)
 {
     LXLog(@"%@",action);
     self.action = action;
+    [self.datasource removeAllObjects];
+//    [self.tableView reloadData];
     [self getList];
 }
 

@@ -48,7 +48,7 @@
 -(void)getCategoriesData:(void(^)(id json))block failure:(void(^)(NSError *error))failure
 {
     [LXHttpTool get:GET_Categories parameters:nil success:^(id json) {
-        LXLog(@"%@",json);
+//        LXLog(@"%@",json);
         if (json[@"status"]) {//获取数据成功   已经获取分类列表
             if ([json[@"msg"] isEqualToString:@"获取成功"]) {
                 if (![json[@"result"] isKindOfClass:[NSNull class]]){
@@ -68,7 +68,7 @@
     } failure:^(NSError *error) {
         LXLog(@"%@",error);
         failure(error);
-        [[Tostal sharTostal] tostalMesg:@"请求数据失败" tostalTime:1];;
+        [[Tostal sharTostal] tostalMesg:@"请求数据失败" tostalTime:1];
     }];
 }
 
@@ -109,5 +109,31 @@
         failure(error);
     }];
 }
-
+-(void)getArticleDetailDataWithDetailID:(NSString *)ID block:(void(^)(id json))block failure:(void(^)(NSError *error))failure
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    parameters[@"articleId"] = ID;
+    [LXHttpTool post:POST_ArticleDetail parameters:parameters success:^(id json) {
+        if (json[@"status"]) {
+            
+            if (![json[@"result"] isKindOfClass:[NSNull class]]){
+                
+                //字典数组转模型数组
+                NSDictionary *dic = json[@"result"];
+                Article *article = [Article mj_objectWithKeyValues:dic];
+                block(article);
+                
+            }else
+            {
+                [[Tostal sharTostal] tostalMesg:@"请求数据失败" tostalTime:1];
+            }
+        }else
+        {
+            [[Tostal sharTostal] tostalMesg:@"请求数据失败" tostalTime:1];
+        }
+        
+    } failure:^(NSError *error) {
+        failure(error);
+    }];
+}
 @end

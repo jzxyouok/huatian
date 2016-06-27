@@ -13,4 +13,6 @@
 #import "MBProgressHUD.h"
 #import "LXGlobeConst.h"
 #import "Tostal.h"
+#import "NSString+LXExtension.h"
+#import "UIButton+Extension.h"
 #endif

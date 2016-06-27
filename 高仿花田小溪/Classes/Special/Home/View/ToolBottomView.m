@@ -80,6 +80,7 @@ Button_(timeBtn)
 {
     if (!_zanBtn) {
         _zanBtn = [self createBtnWithImageName:@"p_zan"];
+//        _zanBtn.backgroundColor = [UIColor redColor];
     }
     return _zanBtn;
 }
@@ -88,6 +89,7 @@ Button_(timeBtn)
 {
     if (!_timeBtn) {
         _timeBtn = [self createBtnWithImageName:@"ad_time"];
+//        _timeBtn.backgroundColor = [UIColor redColor];
     }
     return _timeBtn;
 }
@@ -135,9 +137,9 @@ Button_(timeBtn)
     [self.zanBtn setTitle:[NSString stringWithFormat:@"%zd",article.favo] forState:UIControlStateNormal];
     //判断是否显示
     if (article.isNotHomeList) {
-        if (article.createDateDesc) {
+        if (article.createDate) {
             self.timeBtn.hidden = NO;
-            [self.zanBtn setTitle:article.createDateDesc forState:UIControlStateNormal];
+            [self.timeBtn setTitle:article.createDate forState:UIControlStateNormal];
             self.commentBtn.userInteractionEnabled= YES;
         }else
         {

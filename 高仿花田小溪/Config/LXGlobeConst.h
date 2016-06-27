@@ -9,7 +9,8 @@ UIKIT_EXTERN NSString * const POST_HomeList;
 /**获取每周TOP10 */
 UIKIT_EXTERN NSString * const POST_TOP10List;
 
-
+/**获取文章详情 */
+UIKIT_EXTERN NSString * const POST_ArticleDetail;
 
 
 
