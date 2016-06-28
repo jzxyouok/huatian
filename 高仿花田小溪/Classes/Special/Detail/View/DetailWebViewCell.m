@@ -7,7 +7,7 @@
 //
 
 #import "DetailWebViewCell.h"
-
+#import "ImageBrowserViewController.h"
 static NSString *DetailWebViewCellHeightChangeNoti = @"DetailWebViewCellHeightChangeNoti";
 static NSString *DetailWebViewCellHeightKey = @"DetailWebCellHeightKey";
 @interface DetailWebViewCell()<UIWebViewDelegate>
@@ -83,6 +83,10 @@ BOOL_(isFinishLoad)
         //如果是点击图片
         if ([components[0] isEqualToString:@"imageclick"]) {
             //跳转
+            ImageBrowserViewController *vc = [[ImageBrowserViewController alloc] init];
+            vc.imageUrls = @[[NSURL URLWithString:components.lastObject]];
+            vc.indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            [self.parentViewController presentViewController:vc animated:YES completion:nil];
             return NO;
         }
         
